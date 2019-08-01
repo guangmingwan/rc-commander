@@ -36,7 +36,10 @@ const int CWindow::execute(void)
         // Handle key press
         while (SDL_PollEvent(&l_event))
         {
-            if (l_event.type == SDL_KEYDOWN)
+            if (l_event.type == SDL_KEYDOWN ||
+                l_event.type == SDL_JOYAXISMOTION ||
+                l_event.type == SDL_JOYHATMOTION ||
+                l_event.type == SDL_JOYBUTTONDOWN)
             {
                 l_render = this->keyPress(l_event);
                 if (m_retVal)
@@ -145,7 +148,7 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
         }
 
         break;
-    case SDL_JOYBUTTONDOWN:            /* Handle Joystick Button Presses */
+    case SDL_JOYBUTTONDOWN:             /* Handle Joystick Button Presses */
         if (event->jbutton.button == 0) //x
         {
             /* code goes here */
