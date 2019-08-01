@@ -5,7 +5,7 @@
 #include "resourceManager.h"
 
 extern SDL_Surface *ScreenSurface;
-
+extern SDL_Joystick *g_pJoy;
 // Load an image using SDL_image
 SDL_Surface *SDL_utils::loadImage(const std::string &p_filename)
 {
@@ -107,6 +107,11 @@ void SDL_utils::hastalavista(void)
     CResourceManager::instance().sdlCleanup();
     // Quit SDL
     TTF_Quit();
+
+    if(g_pJoy) {
+        SDL_JoystickClose(g_pJoy);
+    }
+
     SDL_Quit();
 }
 

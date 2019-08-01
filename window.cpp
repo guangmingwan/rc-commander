@@ -3,15 +3,14 @@
 #include "def.h"
 #include "sdlutils.h"
 
-#define KEYHOLD_TIMER_FIRST   6
-#define KEYHOLD_TIMER         2
+#define KEYHOLD_TIMER_FIRST 6
+#define KEYHOLD_TIMER 2
 
 extern SDL_Surface *ScreenSurface;
 
-CWindow::CWindow(void):
-    m_timer(0),
-    m_lastPressed(SDLK_0),
-    m_retVal(0)
+CWindow::CWindow(void) : m_timer(0),
+                         m_lastPressed(SDLK_0),
+                         m_retVal(0)
 {
     // Add window to the lists for render
     Globals::g_windows.push_back(this);
@@ -37,7 +36,7 @@ const int CWindow::execute(void)
         // Handle key press
         while (SDL_PollEvent(&l_event))
         {
-            if (l_event.type == SDL_KEYDOWN)
+            if (l_event->type == SDL_KEYDOWN)
             {
                 l_render = this->keyPress(l_event);
                 if (m_retVal)
@@ -57,11 +56,12 @@ const int CWindow::execute(void)
             SDL_SoftStretch(Globals::g_screen, NULL, ScreenSurface, NULL);
             SDL_Flip(ScreenSurface);
             l_render = false;
-            INHIBIT(std::cout << "Render time: " << SDL_GetTicks() - l_time << "ms"<< std::endl;)
+            INHIBIT(std::cout << "Render time: " << SDL_GetTicks() - l_time << "ms" << std::endl;)
         }
         // Cap the framerate
         l_time = MS_PER_FRAME - (SDL_GetTicks() - l_time);
-        if (l_time <= MS_PER_FRAME) SDL_Delay(l_time);
+        if (l_time <= MS_PER_FRAME)
+            SDL_Delay(l_time);
     }
     return m_retVal;
 }
@@ -71,7 +71,114 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
     // Reset timer if running
     if (m_timer)
         m_timer = 0;
-    m_lastPressed = p_event.key.keysym.sym;
+    SDL_Event *event = p_event;
+    switch (event->type)
+    {
+    case SDL_JOYAXISMOTION: /* Handle Joystick Motion */
+        if ((event->jaxis.value < -3200) || (event->jaxis.value > 3200))
+        {
+            /* code goes here */
+            if (event->jaxis.axis == 0)
+            {
+                /* Left-right movement code goes here */
+                printf(" Left-right\n");
+                if (event->jaxis.value < -3200)
+                {
+                    p_event->key.keysym.sym = SDLK_LEFT;
+                }
+                else if (event->jaxis.value > 3200)
+                {
+                    p_event->key.keysym.sym = SDLK_RIGHT;
+                }
+            }
+
+            if (event->jaxis.axis == 1)
+            {
+                /* Up-Down movement code goes here */
+                printf("Up-Down\n");
+                if (event->jaxis.value < -3200)
+                {
+                    p_event->key.keysym.sym = SDLK_UP;
+                }
+                else if (event->jaxis.value > 3200)
+                {
+                    p_event->key.keysym.sym = SDLK_DOWN;
+                }
+            }
+        }
+        else
+        {
+            //p_event->key.keysym.sym = -1;
+        }
+        break;
+
+    case SDL_JOYHATMOTION:
+        if (event->jhat.value == 0)
+        {
+            //p_event->key.keysym.sym = -1;
+        }
+        if (event->jhat.value & SDL_HAT_UP)
+        {
+            /* Do up stuff here */
+            p_event->key.keysym.sym = SDLK_UP;
+        }
+
+        else if (event->jhat.value & SDL_HAT_LEFT)
+        {
+            /* Do left stuff here */
+            p_event->key.keysym.sym = SDLK_LEFT;
+        }
+
+        else if (event->jhat.value & SDL_HAT_RIGHT)
+        {
+            /* Do right and down together stuff here */
+            p_event->key.keysym.sym = SDLK_RIGHT;
+        }
+        else if (event->jhat.value & SDL_HAT_DOWN)
+        {
+            /* Do right and down together stuff here */
+            p_event->key.keysym.sym = SDLK_DOWN;
+        }
+        else if (event->jhat.value & SDL_HAT_CENTERED)
+        {
+            //p_event->key.keysym.sym = -1;
+        }
+
+        break;
+    case SDL_JOYBUTTONDOWN:            /* Handle Joystick Button Presses */
+        if (event->jbutton.button == 0) //x
+        {
+            /* code goes here */
+        }
+        if (event->jbutton.button == 1) //a
+        {
+            /* code goes here */
+            p_event->key.keysym.sym = SDLK_RETURN;
+        }
+        if (event->jbutton.button == 2) //b
+        {
+            /* code goes here */
+            p_event->key.keysym.sym = SDLK_ESCAPE;
+        }
+        if (event->jbutton.button == 3) //y
+        {
+            /* code goes here */
+        }
+        printf("event->jbutton.button %d", event->jbutton.button);
+        break;
+    case SDL_JOYBUTTONUP:
+        p_event->key.keysym.sym = -1;
+        break;
+    case SDL_KEYDOWN:
+        keyPress = event->key.keysym.sym;
+        break;
+    case SDL_MOUSEMOTION:
+        break;
+    default:
+        break;
+    }
+
+    m_lastPressed = p_event->key.keysym.sym;
     return false;
 }
 
