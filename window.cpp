@@ -169,12 +169,12 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
             /* code goes here */
             event->key.keysym.sym = SDLK_q;
         }
-        if (event->jbutton.button == 4) //select
+        if (event->jbutton.button == 8) //select
         {
             /* code goes here */
             event->key.keysym.sym = SDLK_INSERT;
         }
-        if (event->jbutton.button == 5) //start
+        if (event->jbutton.button == 9) //start
         {
             /* code goes here */
             event->key.keysym.sym = SDLK_w;

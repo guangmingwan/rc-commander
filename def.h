@@ -10,9 +10,9 @@
 #define SURFACE_FLAGS         SDL_SWSURFACE
 #define MS_PER_FRAME          33
 // Panel
-#define LINE_HEIGHT           18
-#define NB_VISIBLE_LINES      17
-#define Y_LIST                20
+#define LINE_HEIGHT           20
+#define NB_VISIBLE_LINES      14
+#define Y_LIST                22 
 #define Y_HEADER              3
 #define Y_FOOTER              308
 #define H_FOOTER              16

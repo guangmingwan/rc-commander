@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #define X_LEFT                1
-#define X_RIGHT               162
+#define X_RIGHT               246
 
 CCommander::CCommander(const std::string &p_pathL, const std::string &p_pathR):
     CWindow::CWindow(),
