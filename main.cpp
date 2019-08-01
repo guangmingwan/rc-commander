@@ -12,7 +12,8 @@
 // Globals
 SDL_Surface *ScreenSurface;
 SDL_Surface *Globals::g_screen = NULL;
-static SDL_Joystick *g_pJoy = NULL;
+SDL_Joystick *g_pJoy = NULL;
+
 const SDL_Color Globals::g_colorTextNormal = {COLOR_TEXT_NORMAL};
 const SDL_Color Globals::g_colorTextTitle = {COLOR_TEXT_TITLE};
 const SDL_Color Globals::g_colorTextDir = {COLOR_TEXT_DIR};
@@ -28,10 +29,10 @@ int main(int argc, char **argv)
     }
 
     // Init SDL
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO|SDL_INIT_JOYSTICK);
 
     // Screen
-    ScreenSurface = SDL_SetVideoMode(320, 480, SCREEN_BPP, SURFACE_FLAGS);
+    ScreenSurface = SDL_SetVideoMode(480, 320, SCREEN_BPP, SURFACE_FLAGS);
     Globals::g_screen = SDL_CreateRGBSurface(SDL_SWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 16, 0, 0, 0, 0);
     if (Globals::g_screen == NULL)
     {
@@ -44,24 +45,24 @@ int main(int argc, char **argv)
 
     if (SDL_NumJoysticks() > 0)
     {
-        std::cout(printf("Found Joysticks %d\n", SDL_NumJoysticks()));
-        JY_Debug("The names of the joysticks are:\n");
+        std::cout << printf("Found Joysticks %d\n", SDL_NumJoysticks());
+        printf("The names of the joysticks are:\n");
 
-        for (i = 0; i < SDL_NumJoysticks(); i++)
+        for (int i = 0; i < SDL_NumJoysticks(); i++)
         {
-            std::cout(printf(("    %s\n", SDL_JoystickName(i)));
+            std::cout << printf("    %s\n", SDL_JoystickName(i));
         }
         SDL_JoystickEventState(SDL_ENABLE);
         g_pJoy = SDL_JoystickOpen(0);
 
         if (g_pJoy != NULL)
         {
-            std::cout(printf(("    Open ok for %s\n", SDL_JoystickName(0)));
+            std::cout << printf("    Open ok for %s\n", SDL_JoystickName(0));
         }
     }
     else
     {
-        std::cout(printf("no found joysticks\n"));
+        std::cout << printf("no found joysticks\n");
     }
 
     // Init font

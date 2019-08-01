@@ -36,7 +36,7 @@ const int CWindow::execute(void)
         // Handle key press
         while (SDL_PollEvent(&l_event))
         {
-            if (l_event->type == SDL_KEYDOWN)
+            if (l_event.type == SDL_KEYDOWN)
             {
                 l_render = this->keyPress(l_event);
                 if (m_retVal)
@@ -71,7 +71,7 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
     // Reset timer if running
     if (m_timer)
         m_timer = 0;
-    SDL_Event *event = p_event;
+    SDL_Event *event = (SDL_Event *)&p_event;
     switch (event->type)
     {
     case SDL_JOYAXISMOTION: /* Handle Joystick Motion */
@@ -84,11 +84,11 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
                 printf(" Left-right\n");
                 if (event->jaxis.value < -3200)
                 {
-                    p_event->key.keysym.sym = SDLK_LEFT;
+                    event->key.keysym.sym = SDLK_LEFT;
                 }
                 else if (event->jaxis.value > 3200)
                 {
-                    p_event->key.keysym.sym = SDLK_RIGHT;
+                    event->key.keysym.sym = SDLK_RIGHT;
                 }
             }
 
@@ -98,50 +98,50 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
                 printf("Up-Down\n");
                 if (event->jaxis.value < -3200)
                 {
-                    p_event->key.keysym.sym = SDLK_UP;
+                    event->key.keysym.sym = SDLK_UP;
                 }
                 else if (event->jaxis.value > 3200)
                 {
-                    p_event->key.keysym.sym = SDLK_DOWN;
+                    event->key.keysym.sym = SDLK_DOWN;
                 }
             }
         }
         else
         {
-            //p_event->key.keysym.sym = -1;
+            //event->key.keysym.sym = -1;
         }
         break;
 
     case SDL_JOYHATMOTION:
         if (event->jhat.value == 0)
         {
-            //p_event->key.keysym.sym = -1;
+            //event->key.keysym.sym = -1;
         }
         if (event->jhat.value & SDL_HAT_UP)
         {
             /* Do up stuff here */
-            p_event->key.keysym.sym = SDLK_UP;
+            event->key.keysym.sym = SDLK_UP;
         }
 
         else if (event->jhat.value & SDL_HAT_LEFT)
         {
             /* Do left stuff here */
-            p_event->key.keysym.sym = SDLK_LEFT;
+            event->key.keysym.sym = SDLK_LEFT;
         }
 
         else if (event->jhat.value & SDL_HAT_RIGHT)
         {
             /* Do right and down together stuff here */
-            p_event->key.keysym.sym = SDLK_RIGHT;
+            event->key.keysym.sym = SDLK_RIGHT;
         }
         else if (event->jhat.value & SDL_HAT_DOWN)
         {
             /* Do right and down together stuff here */
-            p_event->key.keysym.sym = SDLK_DOWN;
+            event->key.keysym.sym = SDLK_DOWN;
         }
         else if (event->jhat.value & SDL_HAT_CENTERED)
         {
-            //p_event->key.keysym.sym = -1;
+            //event->key.keysym.sym = -1;
         }
 
         break;
@@ -153,12 +153,12 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
         if (event->jbutton.button == 1) //a
         {
             /* code goes here */
-            p_event->key.keysym.sym = SDLK_RETURN;
+            event->key.keysym.sym = SDLK_RETURN;
         }
         if (event->jbutton.button == 2) //b
         {
             /* code goes here */
-            p_event->key.keysym.sym = SDLK_ESCAPE;
+            event->key.keysym.sym = SDLK_ESCAPE;
         }
         if (event->jbutton.button == 3) //y
         {
@@ -167,10 +167,7 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
         printf("event->jbutton.button %d", event->jbutton.button);
         break;
     case SDL_JOYBUTTONUP:
-        p_event->key.keysym.sym = -1;
-        break;
-    case SDL_KEYDOWN:
-        keyPress = event->key.keysym.sym;
+        //event->key.keysym.sym = -1;
         break;
     case SDL_MOUSEMOTION:
         break;
@@ -178,7 +175,7 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
         break;
     }
 
-    m_lastPressed = p_event->key.keysym.sym;
+    m_lastPressed = event->key.keysym.sym;
     return false;
 }
 
