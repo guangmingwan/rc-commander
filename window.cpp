@@ -152,6 +152,7 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
         if (event->jbutton.button == 0) //x
         {
             /* code goes here */
+            event->key.keysym.sym = SDLK_a;
         }
         if (event->jbutton.button == 1) //a
         {
@@ -161,11 +162,22 @@ const bool CWindow::keyPress(const SDL_Event &p_event)
         if (event->jbutton.button == 2) //b
         {
             /* code goes here */
-            event->key.keysym.sym = SDLK_ESCAPE;
+            event->key.keysym.sym = SDLK_BACKSPACE;
         }
         if (event->jbutton.button == 3) //y
         {
             /* code goes here */
+            event->key.keysym.sym = SDLK_q;
+        }
+        if (event->jbutton.button == 4) //select
+        {
+            /* code goes here */
+            event->key.keysym.sym = SDLK_INSERT;
+        }
+        if (event->jbutton.button == 5) //start
+        {
+            /* code goes here */
+            event->key.keysym.sym = SDLK_w;
         }
         printf("event->jbutton.button %d", event->jbutton.button);
         break;
